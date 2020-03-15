@@ -1,0 +1,7 @@
+<div>
+  <h1>Change detected in job <%= @job.name %>!</h1>
+  <p>At <%= format_date(@job.last_check_at) %> a change was registered by job <%= @job.name %>.</p>
+  <p>Last state was: <%= inspect @previous_state %></p>
+  <p>Current state is: <%= inspect @job.last_state %></p>
+  <p>You can visit the page at <a href="<%= @job.url %>">this link</a>.</p>
+</div>
