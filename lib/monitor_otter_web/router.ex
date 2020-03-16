@@ -16,6 +16,6 @@ defmodule MonitorOtterWeb.Router do
   scope "/", MonitorOtterWeb do
     pipe_through :browser
 
-    # get "/", PageController, :index
+    get "/", RootController, :index
   end
 end

@@ -1,3 +1,10 @@
 /* This file is for your main application css. */
+.main{
+    margin: 30px;
+}
 
-@import "./phoenix.css";
+.top-header {
+    padding-left: 150px;
+    border-bottom: 1px solid gray;
+    margin-bottom: 50px;
+}
