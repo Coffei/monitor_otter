@@ -78,11 +78,11 @@ config :phoenix, :plug_init_mode, :runtime
 # Swoosh configuration
 config :monitor_otter, MonitorOtterWeb.Mailer,
   adapter: Swoosh.Adapters.SMTP,
-  relay: System.get_env("MONITOR_OTTER_SMTP_RELAY"),
-  username: System.get_env("MONITOR_OTTER_SMTP_USER"),
-  password: System.get_env("MONITOR_OTTER_SMTP_PASSWORD"),
-  ssl: System.get_env("MONITOR_OTTER_SMTP_USE_SSL") == "true",
-  tls: String.to_atom(System.get_env("MONITOR_OTTER_SMTP_USE_TLS") || "always"),
-  auth: String.to_atom(System.get_env("MONITOR_OTTER_SMTP_AUTH") || "always"),
-  port: String.to_integer(System.get_env("MONITOR_OTTER_SMTP_PORT") || "587"),
-  from: System.get_env("MONITOR_OTTER_SMTP_FROM")
+  relay: System.get_env("SMTP_RELAY"),
+  username: System.get_env("SMTP_USER"),
+  password: System.get_env("SMTP_PASSWORD"),
+  ssl: System.get_env("SMTP_USE_SSL") == "true",
+  tls: String.to_atom(System.get_env("SMTP_USE_TLS", "always")),
+  auth: String.to_atom(System.get_env("SMTP_AUTH", "always")),
+  port: String.to_integer(System.get_env("SMTP_PORT", "587")),
+  from: System.get_env("SMTP_FROM")

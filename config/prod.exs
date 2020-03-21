@@ -1,5 +1,11 @@
 use Mix.Config
 
+config :monitor_otter, MonitorOtter.Repo,
+  show_sensitive_data_on_connection_error: false
+
+config :monitor_otter, MonitorOtterWeb.Mailer,
+  adapter: Swoosh.Adapters.SMTP
+
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.
@@ -49,7 +55,3 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-
-# Finally import the config/prod.secret.exs which loads secrets
-# and configuration from environment variables.
-import_config "prod.secret.exs"
