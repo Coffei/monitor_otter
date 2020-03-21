@@ -40,10 +40,10 @@
             <div class="badge badge-dark"><%= job.checker_type %></div>
           </td>
           <td><code><%= inspect job.last_state %></code></td>
-          <td><%= format_ts(job.last_check_at) %></td>
-          <td><%= format_ts(job.last_check_change_at) %></td>
-          <td><%= format_ts(job.created_at) %></td>
-          <td><%= format_ts(job.changed_at) %></td>
+          <td><%= format_ts(job.last_check_at, "none") %></td>
+          <td><%= format_ts(job.last_check_change_at, "none") %></td>
+          <td><%= format_ts(job.created_at, "none") %></td>
+          <td><%= format_ts(job.changed_at, "none") %></td>
         </tr>
       <% end %>
     </tbody>
