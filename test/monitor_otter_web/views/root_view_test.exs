@@ -3,7 +3,11 @@ defmodule MonitorOtterWeb.RootViewTest do
   alias MonitorOtterWeb.RootView
 
   test "time is formatted properly" do
-    assert RootView.format_ts(~U[2020-03-20T12:54:12Z]) == "20.3.2020 13:54"
+    assert RootView.format_ts(~U[2020-03-20T12:54:12Z], "none") == "20.3.2020 13:54"
+  end
+
+  test "default is given if time is not formattable" do
+    assert RootView.format_ts(nil, "none-default") == "none-default"
   end
 
   test "extract hostname from url" do
