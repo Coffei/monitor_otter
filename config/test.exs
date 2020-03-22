@@ -25,3 +25,6 @@ config :logger, level: :warn
 config :monitor_otter, MonitorOtterWeb.Mailer,
   adapter: Swoosh.Adapters.Test,
   from: "test@test.com"
+
+# Lower Bcrypt rounds in tests
+config :bcrypt_elixir, log_rounds: 4
