@@ -10,6 +10,10 @@ defmodule MonitorOtterWeb.Router do
     plug MonitorOtterWeb.Plugs.Auth
   end
 
+  pipeline :authenticated do
+    plug MonitorOtterWeb.Plugs.EnsureAuth
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -21,5 +25,10 @@ defmodule MonitorOtterWeb.Router do
     get "/login", LoginController, :index
     post "/login", LoginController, :login
     delete "/logout", LoginController, :logout
+
+    scope "/user" do
+      pipe_through :authenticated
+      get "/jobs", JobController, :index
+    end
   end
 end
