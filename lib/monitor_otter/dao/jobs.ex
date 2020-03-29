@@ -98,4 +98,18 @@ defmodule MonitorOtter.DAO.Jobs do
       _ -> {:error, :not_found}
     end
   end
+
+  @doc """
+  Assigns the given user to jobs unassigned to any users.
+
+  Jobs without users can exist from before when Job wasn't yet linked to User.
+  """
+  def set_default_user(user) do
+    query =
+      from j in Job,
+        where: is_nil(j.user_id)
+
+    {count, _} = Repo.update_all(query, set: [user_id: user.id])
+    {:ok, count}
+  end
 end

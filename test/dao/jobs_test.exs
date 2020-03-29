@@ -3,6 +3,7 @@ defmodule MonitorOtter.DAO.JobsTest do
   alias MonitorOtter.DAO.Jobs
   alias MonitorOtter.DAO.Users
   alias MonitorOtter.Models.Job
+  alias MonitorOtter.Repo
 
   test "job is created" do
     start = System.os_time(:second)
@@ -242,6 +243,49 @@ defmodule MonitorOtter.DAO.JobsTest do
 
     assert [%Job{id: ^id1}] = Jobs.get_all_by_user(user1)
     assert [%Job{id: ^id2}] = Jobs.get_all_by_user(user2)
+  end
+
+  test "default user is set for all jobs without user" do
+    user = user()
+    new_user = user("default@email.com")
+
+    ids =
+      for _ <- 1..10 do
+        {:ok, %Job{id: id}} =
+          Jobs.create(%{
+            name: "test job",
+            enabled: false,
+            url: "url_to_chec",
+            checker_type: "regex",
+            checker_config: %{"regex" => "aaa"},
+            notification_email: "test@email.com",
+            user: user
+          })
+
+        id
+      end
+
+    {with_user, without_user} =
+      ids
+      |> Enum.sort()
+      |> Enum.split(5)
+
+    Repo.update_all(from(j in Job, where: j.id in ^without_user), set: [user_id: nil])
+
+    assert Jobs.set_default_user(new_user) == {:ok, 5}
+
+    original_jobs =
+      Jobs.get_all_by_user(user)
+      |> Enum.map(& &1.id)
+      |> Enum.sort()
+
+    new_jobs =
+      Jobs.get_all_by_user(new_user)
+      |> Enum.map(& &1.id)
+      |> Enum.sort()
+
+    assert original_jobs == with_user
+    assert new_jobs == without_user
   end
 
   defp user(email \\ "test@email.com") do
