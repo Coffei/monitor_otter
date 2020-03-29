@@ -1,10 +1,14 @@
 /* This file is for your main application css. */
 .main{
     margin: 30px;
+    margin-top: 15px;
+}
+
+nav.navbar {
+    margin-bottom: 15px;
 }
 
 .top-header {
-    padding-left: 150px;
     border-bottom: 1px solid gray;
     margin-bottom: 50px;
 }

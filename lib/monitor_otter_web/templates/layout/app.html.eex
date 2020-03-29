@@ -1,18 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= assigns[:page_title] || "Monitor Otter · Phoenix Framework" %></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>" />
     <%= csrf_meta_tag() %>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="main">
-      <%= render @view_module, @view_template, assigns %>
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="<%= Routes.root_path(@conn, :index) %>">Monitor Otter</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <%= if @authenticated? do %>
+                            <li class="nav-item">
+                                <%= link("Your jobs", to: Routes.job_path(@conn, :index), class: "nav-link") %>
+                            </li>
+                        <% end %>
+                    </ul>
+                        <%= if @authenticated? do %>
+                            <span class="navbar-text">
+                                Logged in as <%= @auth_user.name %>
+                                <svg class="bi bi-chevron-compact-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 01.671.223l3 6a.5.5 0 010 .448l-3 6a.5.5 0 11-.894-.448L9.44 8 6.553 2.224a.5.5 0 01.223-.671z" clip-rule="evenodd"/>
+                                </svg>
+                            </span>
+                            <ul class="navbar-nav mr-1">
+                                <li class="nav-item">
+                                    <%= link("Log out", to: Routes.login_path(@conn, :logout), method: :delete, class: "nav-link") %>
+                                </li>
+                            </ul>
+                        <% else %>
+                            <ul class="navbar-nav mr-1">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<%= Routes.login_path(@conn, :index) %>">Log in</a>
+                                </li>
+                            </ul>
+                        <% end %>
+                </div>
+            </nav>
+            <%= render @view_module, @view_template, assigns %>
+        </div>
     </div>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
-  </body>
+</body>
+
 </html>
