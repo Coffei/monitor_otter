@@ -12,3 +12,7 @@ nav.navbar {
     border-bottom: 1px solid gray;
     margin-bottom: 50px;
 }
+
+.badge-popover {
+    cursor: pointer;
+}
