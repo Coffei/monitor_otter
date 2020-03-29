@@ -11,7 +11,10 @@ defmodule MonitorOtterWeb.RootView do
 
   def hostname(url) do
     regex = ~r/^.+:\/\/([^\/?#]+)/
-    [_, hostname] = Regex.run(regex, url)
-    hostname
+
+    case Regex.run(regex, url) do
+      [_, hostname] -> hostname
+      _ -> url
+    end
   end
 end
