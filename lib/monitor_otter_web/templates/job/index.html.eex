@@ -35,7 +35,7 @@
             <a href="<%= job.url %>" target="_blank"><%= hostname(job.url) %></a>
           </td>
           <td>
-            <div class="badge badge-dark"><%= job.checker_type %></div>
+            <div class="badge badge-dark" data-toggle="popover" title="Checker <%= job.checker_type %>" data-content="<%= inspect(job.checker_config, pretty: true) %>" data-trigger="hover"><%= job.checker_type %></div>
           </td>
           <td><code><%= inspect job.last_state %></code></td>
           <td><%= format_ts(job.last_check_at, "none") %></td>
