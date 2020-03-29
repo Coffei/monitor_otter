@@ -1,0 +1,49 @@
+<div class="top-header">
+    <h1 class="display-6">Your jobs</h1>
+</div>
+<%= if Enum.empty?(@jobs) do %>
+  <div class="alert alert-warning">No jobs available...</div>
+<% else %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Enabled</th>
+        <th scope="col">URL</th>
+        <th scope="col">Checker</th>
+        <th scope="col">Last state</th>
+        <th scope="col">Last check at</th>
+        <th scope="col">Last change detected at</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Updated at</th>
+      </tr>
+    </thead>
+    <tbody>
+        <%= for job <- @jobs do %>
+        <tr>
+          <th scope="row"><%= job.id %></th>
+          <td><b><%= job.name %></b></td>
+          <td>
+            <%= if job.enabled do %>
+              <div class="badge badge-success">enabled</div>
+            <% else %>
+              <div class="badge badge-danger">disabled</div>
+            <% end %>
+          </td>
+          <td>
+            <a href="<%= job.url %>" target="_blank"><%= hostname(job.url) %></a>
+          </td>
+          <td>
+            <div class="badge badge-dark"><%= job.checker_type %></div>
+          </td>
+          <td><code><%= inspect job.last_state %></code></td>
+          <td><%= format_ts(job.last_check_at, "none") %></td>
+          <td><%= format_ts(job.last_check_change_at, "none") %></td>
+          <td><%= format_ts(job.created_at, "none") %></td>
+          <td><%= format_ts(job.changed_at, "none") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
