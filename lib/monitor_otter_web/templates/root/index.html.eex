@@ -2,50 +2,40 @@
   <h1 class="display-4">Monitor Otter</h1>
   <h5><small>Monitoring your web pages since 2020..</small></h5>
 </div>
-<h3>Jobs</h3>
-<%= if Enum.empty?(@jobs) do %>
-  <div class="alert alert-warning">No jobs available...</div>
-<% else %>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Enabled</th>
-        <th scope="col">URL</th>
-        <th scope="col">Checker</th>
-        <th scope="col">Last state</th>
-        <th scope="col">Last check at</th>
-        <th scope="col">Last change detected at</th>
-        <th scope="col">Created at</th>
-        <th scope="col">Updated at</th>
-      </tr>
-    </thead>
-    <tbody>
-        <%= for job <- @jobs do %>
+<%= if @authenticated? do %>
+    <h3>Your active jobs</h3>
+    <table class="table">
+        <thead>
         <tr>
-          <th scope="row"><%= job.id %></th>
-          <td><b><%= job.name %></b></td>
-          <td>
-            <%= if job.enabled do %>
-              <div class="badge badge-success">enabled</div>
-            <% else %>
-              <div class="badge badge-danger">disabled</div>
-            <% end %>
-          </td>
-          <td>
-            <a href="<%= job.url %>" target="_blank"><%= hostname(job.url) %></a>
-          </td>
-          <td>
-            <div class="badge badge-dark"><%= job.checker_type %></div>
-          </td>
-          <td><code><%= inspect job.last_state %></code></td>
-          <td><%= format_ts(job.last_check_at, "none") %></td>
-          <td><%= format_ts(job.last_check_change_at, "none") %></td>
-          <td><%= format_ts(job.created_at, "none") %></td>
-          <td><%= format_ts(job.changed_at, "none") %></td>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">URL</th>
+            <th scope="col">Last state</th>
+            <th scope="col">Last check at</th>
+            <th scope="col">Last change detected at</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+            <%= for job <- @jobs do %>
+            <tr>
+                <th scope="row"><%= job.id %></th>
+                <td><b><%= job.name %></b></td>
+                <td>
+                    <a href="<%= job.url %>" target="_blank"><%= hostname(job.url) %></a>
+                </td>
+                <td><code><%= inspect job.last_state %></code></td>
+                <td><%= format_ts(job.last_check_at, "none") %></td>
+                <td><%= format_ts(job.last_check_change_at, "none") %></td>
+            </tr>
+        <% end %>
+        </tbody>
+    </table>
+<% else %>
+    <div class="alert alert-info">
+        <svg class="bi bi-info-circle-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 16A8 8 0 108 0a8 8 0 000 16zm.93-9.412l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+        </svg>
+        &nbsp;
+        Log in to use this app.
+    </div>
 <% end %>
