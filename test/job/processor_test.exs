@@ -2,6 +2,7 @@ defmodule MonitorOtter.Job.ProcessorTest do
   use MonitorOtter.DataCase
   import Swoosh.TestAssertions
   alias MonitorOtter.DAO.Jobs
+  alias MonitorOtter.DAO.Users
   alias MonitorOtter.Job.Processor
   alias MonitorOtterWeb.UserEmail
 
@@ -14,6 +15,7 @@ defmodule MonitorOtter.Job.ProcessorTest do
         checker_type: "regex",
         checker_config: %{"regex" => "(bb)"},
         notification_email: "test@email.com",
+        user: user(),
         last_state: ["aa"]
       })
 
@@ -32,6 +34,7 @@ defmodule MonitorOtter.Job.ProcessorTest do
         checker_type: "regex",
         checker_config: %{"regex" => "(bb)"},
         notification_email: "test@email.com",
+        user: user(),
         last_state: ["aa"]
       })
 
@@ -54,6 +57,7 @@ defmodule MonitorOtter.Job.ProcessorTest do
         checker_type: "regex",
         checker_config: %{"regex" => "(bb)"},
         notification_email: "test@email.com",
+        user: user(),
         last_state: ["bb"]
       })
 
@@ -70,6 +74,7 @@ defmodule MonitorOtter.Job.ProcessorTest do
         checker_type: "regex",
         checker_config: %{"regex" => "(bb)"},
         notification_email: "test@email.com",
+        user: user(),
         last_state: ["bb"]
       })
 
@@ -81,6 +86,11 @@ defmodule MonitorOtter.Job.ProcessorTest do
     assert %DateTime{} = job.last_check_at
     assert process_start <= DateTime.to_unix(job.last_check_at, :second)
     assert job.last_check_change_at == nil
+  end
+
+  defp user do
+    {:ok, user} = Users.create(%{name: "test", email: "test@email.com", password: "password"})
+    user
   end
 
   defp email(job, prev_state) do

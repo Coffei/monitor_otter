@@ -1,6 +1,7 @@
 defmodule MonitorOtter.Models.JobTest do
   use ExUnit.Case
   alias MonitorOtter.Models.Job
+  alias MonitorOtter.Models.User
 
   test "valid changeset" do
     changeset =
@@ -11,6 +12,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user(),
         created_at: DateTime.utc_now(),
         changed_at: DateTime.utc_now()
       })
@@ -26,6 +28,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user(),
         last_state: %{some: :state},
         last_check_at: DateTime.utc_now(),
         last_check_change_at: DateTime.utc_now(),
@@ -50,7 +53,8 @@ defmodule MonitorOtter.Models.JobTest do
              {:checker_config, {"can't be blank", validation: :required}},
              {:notification_email, {"can't be blank", validation: :required}},
              {:created_at, {"can't be blank", validation: :required}},
-             {:changed_at, {"can't be blank", validation: :required}}
+             {:changed_at, {"can't be blank", validation: :required}},
+             {:user, {"can't be blank", validation: :required}}
            ]
   end
 
@@ -63,6 +67,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user(),
         created_at: DateTime.utc_now(),
         changed_at: DateTime.utc_now()
       })
@@ -83,6 +88,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user(),
         created_at: DateTime.utc_now(),
         changed_at: DateTime.utc_now()
       })
@@ -105,6 +111,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "invalid",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user(),
         created_at: DateTime.utc_now(),
         changed_at: DateTime.utc_now()
       })
@@ -125,6 +132,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: 123,
         checker_config: "configuration",
         notification_email: [],
+        user: :user,
         last_check_at: :bad_last_check_at,
         last_check_change_at: :bad_last_check_change_at,
         created_at: 123,
@@ -134,6 +142,7 @@ defmodule MonitorOtter.Models.JobTest do
     refute changeset.valid?
 
     assert changeset.errors == [
+             {:user, {"is invalid", type: :map}},
              {:name, {"is invalid", [type: :string, validation: :cast]}},
              {:enabled, {"is invalid", [type: :boolean, validation: :cast]}},
              {:url, {"is invalid", [type: :string, validation: :cast]}},
@@ -156,6 +165,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user(),
         created_at: DateTime.utc_now(),
         changed_at: DateTime.utc_now()
       })
@@ -178,6 +188,7 @@ defmodule MonitorOtter.Models.JobTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test",
+        user: user(),
         created_at: DateTime.utc_now(),
         changed_at: DateTime.utc_now()
       })
@@ -187,5 +198,14 @@ defmodule MonitorOtter.Models.JobTest do
     assert changeset.errors == [
              {:notification_email, {"has invalid format", [validation: :format]}}
            ]
+  end
+
+  defp user do
+    %User{
+      id: 1,
+      name: "test",
+      email: "test@email.com",
+      password: "encoded_hash"
+    }
   end
 end

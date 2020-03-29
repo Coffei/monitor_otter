@@ -16,6 +16,18 @@ defmodule MonitorOtter.DAO.Users do
   end
 
   @doc """
+  Return user by its email.
+  """
+  def get_by_email(email) do
+    query =
+      from u in User,
+        where: u.email == ^email,
+        select: u
+
+    Repo.one(query)
+  end
+
+  @doc """
   Create new user.
   """
   def create(user) do

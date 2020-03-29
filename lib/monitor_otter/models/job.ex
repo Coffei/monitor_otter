@@ -3,6 +3,7 @@ defmodule MonitorOtter.Models.Job do
   Job model.
   """
   use Ecto.Schema
+  alias MonitorOtter.Models.User
 
   import Ecto.Changeset,
     only: [
@@ -10,7 +11,8 @@ defmodule MonitorOtter.Models.Job do
       validate_required: 2,
       validate_length: 3,
       validate_change: 3,
-      validate_format: 3
+      validate_format: 3,
+      put_assoc: 3
     ]
 
   alias MonitorOtter.Models.Types.JobState
@@ -28,6 +30,7 @@ defmodule MonitorOtter.Models.Job do
     field :last_check_change_at, :utc_datetime
     field :created_at, :utc_datetime
     field :changed_at, :utc_datetime
+    belongs_to :user, User
   end
 
   @doc "Create a job changeset."
@@ -46,6 +49,7 @@ defmodule MonitorOtter.Models.Job do
       :created_at,
       :changed_at
     ])
+    |> conditionally_put_assoc(:user, params[:user])
     |> validate_required([
       :name,
       :enabled,
@@ -54,12 +58,21 @@ defmodule MonitorOtter.Models.Job do
       :checker_config,
       :notification_email,
       :created_at,
-      :changed_at
+      :changed_at,
+      :user
     ])
     |> validate_length(:name, min: 3, max: 256)
     |> validate_checker_type(:checker_type)
     |> validate_length(:url, min: 3)
     |> validate_format(:notification_email, ~r/.+@.+/)
+  end
+
+  defp conditionally_put_assoc(changeset, _, nil) do
+    changeset
+  end
+
+  defp conditionally_put_assoc(changeset, field, value) do
+    put_assoc(changeset, field, value)
   end
 
   defp validate_checker_type(changeset, field) do

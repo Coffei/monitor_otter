@@ -1,6 +1,7 @@
 defmodule MonitorOtter.DAO.JobsTest do
   use MonitorOtter.DataCase
   alias MonitorOtter.DAO.Jobs
+  alias MonitorOtter.DAO.Users
   alias MonitorOtter.Models.Job
 
   test "job is created" do
@@ -13,7 +14,8 @@ defmodule MonitorOtter.DAO.JobsTest do
                url: "url_to_chec",
                checker_type: "regex",
                checker_config: %{"regex" => "aaa"},
-               notification_email: "test@email.com"
+               notification_email: "test@email.com",
+               user: user()
              })
 
     assert is_integer(id)
@@ -50,7 +52,8 @@ defmodule MonitorOtter.DAO.JobsTest do
         url: "url",
         checker_type: "regex",
         checker_config: %{},
-        notification_email: "test@email.com"
+        notification_email: "test@email.com",
+        user: user()
       })
 
     before_update = System.os_time(:second)
@@ -84,6 +87,7 @@ defmodule MonitorOtter.DAO.JobsTest do
 
   test "job is marked as checked when no changed occurs" do
     start = System.os_time(:second)
+    user = user()
 
     {:ok, %Job{id: new_id}} =
       Jobs.create(%{
@@ -92,7 +96,8 @@ defmodule MonitorOtter.DAO.JobsTest do
         url: "url",
         checker_type: "regex",
         checker_config: %{},
-        notification_email: "test@email.com"
+        notification_email: "test@email.com",
+        user: user
       })
 
     {:ok, %Job{id: marked_id}} =
@@ -103,6 +108,7 @@ defmodule MonitorOtter.DAO.JobsTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user,
         last_check_at: DateTime.from_unix!(start - 10, :second),
         last_check_change_at: DateTime.from_unix!(start - 10, :second)
       })
@@ -129,6 +135,7 @@ defmodule MonitorOtter.DAO.JobsTest do
 
   test "job is marked as changed when last check results in change" do
     start = System.os_time(:second)
+    user = user()
 
     {:ok, %Job{id: new_id}} =
       Jobs.create(%{
@@ -137,7 +144,8 @@ defmodule MonitorOtter.DAO.JobsTest do
         url: "url",
         checker_type: "regex",
         checker_config: %{},
-        notification_email: "test@email.com"
+        notification_email: "test@email.com",
+        user: user
       })
 
     {:ok, %Job{id: marked_id}} =
@@ -148,6 +156,7 @@ defmodule MonitorOtter.DAO.JobsTest do
         checker_type: "regex",
         checker_config: %{},
         notification_email: "test@email.com",
+        user: user,
         last_check_at: DateTime.from_unix!(start - 10, :second),
         last_check_change_at: DateTime.from_unix!(start - 10, :second)
       })
@@ -173,7 +182,8 @@ defmodule MonitorOtter.DAO.JobsTest do
         url: "url",
         checker_type: "regex",
         checker_config: %{},
-        notification_email: "test@email.com"
+        notification_email: "test@email.com",
+        user: user()
       })
 
     assert {:ok, %Job{}} = Jobs.delete(id)
@@ -193,6 +203,7 @@ defmodule MonitorOtter.DAO.JobsTest do
                checker_type: "regex",
                checker_config: %{"regex" => "aaa"},
                notification_email: "test@email.com",
+               user: user(),
                last_state: %{some: {:custom, :erlang, :type}}
              })
 
@@ -201,5 +212,40 @@ defmodule MonitorOtter.DAO.JobsTest do
                last_state: %{some: {:custom, :erlang, :type}}
              }
            ] = Jobs.get_all()
+  end
+
+  test "jobs are assigned to users" do
+    user1 = user()
+    user2 = user("another@email.com")
+
+    {:ok, %Job{id: id1}} =
+      Jobs.create(%{
+        name: "test job",
+        enabled: false,
+        url: "url_to_chec",
+        checker_type: "regex",
+        checker_config: %{"regex" => "aaa"},
+        notification_email: "test@email.com",
+        user: user1
+      })
+
+    {:ok, %Job{id: id2}} =
+      Jobs.create(%{
+        name: "test job",
+        enabled: false,
+        url: "url_to_chec",
+        checker_type: "regex",
+        checker_config: %{"regex" => "aaa"},
+        notification_email: "test@email.com",
+        user: user2
+      })
+
+    assert [%Job{id: ^id1}] = Jobs.get_all_by_user(user1)
+    assert [%Job{id: ^id2}] = Jobs.get_all_by_user(user2)
+  end
+
+  defp user(email \\ "test@email.com") do
+    {:ok, user} = Users.create(%{name: "test", email: email, password: "password"})
+    user
   end
 end

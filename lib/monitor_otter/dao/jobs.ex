@@ -6,12 +6,28 @@ defmodule MonitorOtter.DAO.Jobs do
   """
   alias MonitorOtter.Models.Job
   alias MonitorOtter.Repo
+  import Ecto.Query, only: [from: 2, preload: 2]
 
   @doc """
   Returns all jobs.
   """
   def get_all do
-    Repo.all(Job)
+    Repo.all(Job |> preload(:user))
+  end
+
+  @doc """
+  Returns all jobs from particular user.
+  """
+  def get_all_by_user(user) do
+    user_id = user.id
+
+    query =
+      from j in Job,
+        where: j.user_id == ^user_id,
+        select: j,
+        preload: [:user]
+
+    Repo.all(query)
   end
 
   @doc """
@@ -34,7 +50,7 @@ defmodule MonitorOtter.DAO.Jobs do
   Update existing job.
   """
   def update(id, update) do
-    case Repo.get(Job, id) do
+    case Repo.get(Job |> preload(:user), id) do
       %Job{} = job ->
         params = Map.put(update, :changed_at, DateTime.utc_now())
 
@@ -62,7 +78,7 @@ defmodule MonitorOtter.DAO.Jobs do
         %{last_check_at: now}
       end
 
-    case Repo.get(Job, id) do
+    case Repo.get(Job |> preload(:user), id) do
       %Job{} = job ->
         job
         |> Job.changeset(params)
