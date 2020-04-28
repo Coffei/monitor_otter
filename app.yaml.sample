@@ -1,0 +1,22 @@
+env: flex
+runtime: gs://elixir-runtime/elixir.yaml
+runtime_config:
+    release_app: monitor_otter
+env_variables:
+  DATABASE_SOCKET: "/cloudsql/<CLOUD_SQL_INSTANCE_NAME>"
+  DATABASE_USER: <DB_USER>
+  DATABASE_PASSWORD: <DB_PASSWORD>
+  DATABASE_NAME: <DB_NAME>
+  SECRET_KEY_BASE: <SECRET_KEY_BASE>
+  SMTP_RELAY: <SMTP_RELAY>
+  SMTP_USER: <SMTP_USER>
+  SMTP_PASSWORD: <SMTP_PASSWORD>
+  SMTP_FROM: <SMTP_FROM>
+  COOKIE: <ERLANG_COOKIE>
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 1
+  cpu_utilization:
+    target_utilization: 0.5
+beta_settings:
+    cloud_sql_instances: "<CLOUD_SQL_INSTANCE_NAME>"
