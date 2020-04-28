@@ -10,3 +10,5 @@ don't want to use SMTP, you can modify `config/dev.exs` to use different mailer.
 
 Right now you have to manually create a Job in the elixir console. Some level of configuration via
 UI will come later. Currently jobs are monitored every hour.
+
+You can run this in Google App Engine, see the enclosed `app.yaml.sample`.
