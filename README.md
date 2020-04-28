@@ -1,5 +1,7 @@
 # Monitor Otter
 
+<img src="logo.png" height="250px" alt="hand-drawn realistic otter image"/>
+
 A small app to monitor web pages for you and notify you if a specified change occurs. You can
 specify with regex what in the page is important to you.
 
