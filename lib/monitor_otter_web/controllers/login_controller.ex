@@ -19,7 +19,7 @@ defmodule MonitorOtterWeb.LoginController do
       conn
       |> put_flash(:error, "Bad email/password combination.")
       |> assign(:email, params["email"])
-      |> render("index.html")
+      |> render("index.html", %{redirect_to: conn.params["redirect_to"]})
     end
   end
 
